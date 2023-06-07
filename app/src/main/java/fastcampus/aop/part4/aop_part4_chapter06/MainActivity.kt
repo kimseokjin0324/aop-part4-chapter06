@@ -10,6 +10,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.CancellationTokenSource
+import fastcampus.aop.part4.aop_part4_chapter06.data.Repository
 import fastcampus.aop.part4.aop_part4_chapter06.databinding.ActivityMainBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
@@ -90,7 +91,10 @@ class MainActivity : AppCompatActivity() {
             cancellationTokenSource!!.token
         ).addOnSuccessListener { location ->
             scope.launch {
+                val monitoringStation =
+                    Repository.getNearbyMonitoringStation(location.latitude, location.longitude)
 
+                binding.textView.text = monitoringStation?.stationName
             }
 
         }
