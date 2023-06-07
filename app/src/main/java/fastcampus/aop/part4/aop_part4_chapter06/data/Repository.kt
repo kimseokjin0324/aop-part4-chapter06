@@ -1,6 +1,7 @@
 package fastcampus.aop.part4.aop_part4_chapter06.data
 
 import fastcampus.aop.part4.aop_part4_chapter06.BuildConfig
+import fastcampus.aop.part4.aop_part4_chapter06.data.models.airquality.MeasuredValue
 import fastcampus.aop.part4.aop_part4_chapter06.data.models.monitoringstation.MonitoringStation
 import fastcampus.aop.part4.aop_part4_chapter06.data.services.AirKoreaApiService
 import fastcampus.aop.part4.aop_part4_chapter06.data.services.KakaoLocalApiService
@@ -12,7 +13,10 @@ import retrofit2.create
 
 object Repository {
 
-    suspend fun getNearbyMonitoringStation(latitude: Double, longitude: Double): MonitoringStation? {
+    suspend fun getNearbyMonitoringStation(
+        latitude: Double,
+        longitude: Double
+    ): MonitoringStation? {
         val tmCoordinates = kakaoLocalApiService
             .getTmCoordinates(longitude, latitude)
             .body()
@@ -50,6 +54,15 @@ object Repository {
             .build()
             .create()
     }
+
+    suspend fun getLatestAirQualityData(stationName: String): MeasuredValue? =
+        airKoreaApiService
+            .getRealtimeAirQualities(stationName)
+            .body()
+            ?.response
+            ?.body
+            ?.measuredValues
+            ?.firstOrNull()
 
     private fun buildHttpClient(): OkHttpClient =
         OkHttpClient.Builder()
