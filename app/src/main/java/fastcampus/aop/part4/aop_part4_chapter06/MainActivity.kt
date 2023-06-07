@@ -5,7 +5,9 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -18,6 +20,7 @@ import fastcampus.aop.part4.aop_part4_chapter06.databinding.ActivityMainBinding
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        bindViews()
         initVariables()
 
         //- 1.앱 시작하자마자 Permission 요청
@@ -94,19 +98,42 @@ class MainActivity : AppCompatActivity() {
             cancellationTokenSource!!.token
         ).addOnSuccessListener { location ->
             scope.launch {
-                val monitoringStation =
-                    Repository.getNearbyMonitoringStation(location.latitude, location.longitude)
+                binding.errorDescriptionTextView.visibility = View.GONE
+                try {
+                    val monitoringStation =
+                        Repository.getNearbyMonitoringStation(location.latitude, location.longitude)
 
-                val measuredValue =
-                    Repository.getLatestAirQualityData(monitoringStation!!.stationName!!)
-                displayAirQualityData(monitoringStation, measuredValue!!)
+                    val measuredValue =
+                        Repository.getLatestAirQualityData(monitoringStation!!.stationName!!)
+                    displayAirQualityData(monitoringStation, measuredValue!!)
+
+                } catch (exception: Exception) {
+                    binding.errorDescriptionTextView.visibility = View.VISIBLE
+                    binding.contentsLayout.alpha = 0F
+
+                } finally {
+                    binding.progressBar.visibility = View.GONE
+                    binding.refresh.isRefreshing = false
+                }
 
             }
 
         }
     }
 
+    private fun bindViews() {
+        binding.refresh.setOnRefreshListener {
+            fetchAirQualityData()
+        }
+    }
+
     fun displayAirQualityData(monitoringStation: MonitoringStation, measuredValue: MeasuredValue) {
+
+        binding.contentsLayout.animate()
+            .alpha(1F)
+            .start()
+
+
         binding.measuringStationNameTextView.text = monitoringStation.stationName
         binding.measuringStationAddressTextView.text = monitoringStation.addr
 

@@ -16,8 +16,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String","KAKAO_API_KEY",project.properties["KAKAO_API_KEY"]
-        buildConfigField "String","AIRKOREA_SERVICE_KEY",project.properties["AIRKOREA_SERVICE_KEY"]
+        buildConfigField "String", "KAKAO_API_KEY", project.properties["KAKAO_API_KEY"]
+        buildConfigField "String", "AIRKOREA_SERVICE_KEY", project.properties["AIRKOREA_SERVICE_KEY"]
     }
 
     buildTypes {
@@ -34,7 +34,7 @@ android {
         jvmTarget = '1.8'
     }
 
-    viewBinding{
+    viewBinding {
         enabled = true
     }
     buildFeatures {
@@ -55,6 +55,8 @@ dependencies {
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation "com.squareup.okhttp3:okhttp:4.6.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.6.0"
