@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
@@ -39,6 +40,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_simple_info" />
         </receiver>
+
+        <service
+            android:name=".appWidget.SimpleAirQualityWidgetProvider$UpdateWidgetService"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
